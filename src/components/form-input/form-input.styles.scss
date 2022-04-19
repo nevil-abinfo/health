@@ -32,8 +32,30 @@ $main-color: black;
       @include shrinkLabel();
     }
   }
+  .form-input-search {
+    background: none;
+    background-color: white;
+    color: grey;
+    width: 300px !important;
+    font-size: 18px;
+    padding: 9px 10px 10px 10px;
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    border: 1px solid grey;
+    margin: -22px 0px 0px 285px;
 
-  input[type='password'] {
+    &:focus {
+      outline: none;
+    }
+
+    &:focus ~ .form-input-label {
+      @include shrinkLabel();
+    }
+  }
+
+  input[type="password"] {
     letter-spacing: 0.3em;
   }
 
@@ -44,6 +66,20 @@ $main-color: black;
     position: absolute;
     pointer-events: none;
     left: 5px;
+    top: 10px;
+    transition: 300ms ease all;
+
+    &.shrink {
+      @include shrinkLabel();
+    }
+  }
+  .form-input-label-search {
+    color: $sub-color;
+    font-size: 16px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 300px;
     top: 10px;
     transition: 300ms ease all;
 
