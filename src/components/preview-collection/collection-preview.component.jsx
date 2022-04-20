@@ -2,14 +2,17 @@ import React from "react";
 import CollectionItem from "../collection-item/collection-item.component";
 import "./collection-preview.styles.scss";
 
-const CollectionPreview = ({ name, imageUrl, price }) => {
-  const item = { name, imageUrl, price };
+const CollectionPreview = ({
+  ItemName,
+  ItemImageURl,
+  ItemPrice,
+  UOMDescription,
+  ItemID,
+}) => {
+  const item = { ItemName, ItemImageURl, ItemPrice, UOMDescription, ItemID };
   return (
     <div className="collection-preview">
       <div className="preview">
-        <CollectionItem item={item} />
-        <CollectionItem item={item} />
-        <CollectionItem item={item} />
         <CollectionItem item={item} />
       </div>
     </div>

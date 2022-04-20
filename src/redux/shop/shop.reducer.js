@@ -1,30 +1,38 @@
-import SHOP_DATA from "./shop.data";
 import { ShopActionTypes } from "./shop.type";
 
 const INITIAL_STATE = {
-  collections: SHOP_DATA,
+  collections: [],
+  cloneCollections: [],
 };
 
 const shopReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case ShopActionTypes.SET_FILTER_VALUE:
       let result = action.payload
-        ? SHOP_DATA.filter((data) => {
+        ? state.cloneCollections.filter((data) => {
             return (
               (data &&
-                data.name &&
-                data.name.toLowerCase().search(action.payload.toLowerCase()) !==
-                  -1) ||
+                data.ItemName &&
+                data.ItemName.toLowerCase().search(
+                  action.payload.toLowerCase()
+                ) !== -1) ||
               (data &&
-                data.name &&
-                data.name.toLowerCase().search(action.payload.toLowerCase()) !==
-                  -1)
+                data.ItemName &&
+                data.ItemName.toLowerCase().search(
+                  action.payload.toLowerCase()
+                ) !== -1)
             );
           })
-        : SHOP_DATA;
+        : state.cloneCollections;
       return {
         ...state,
         collections: result || [],
+      };
+    case ShopActionTypes.SET_MEDICINE_LIST:
+      return {
+        ...state,
+        collections: action.payload || [],
+        cloneCollections: action.payload || [],
       };
     default:
       return state;

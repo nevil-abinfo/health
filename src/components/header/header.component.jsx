@@ -17,16 +17,17 @@ let hideSearchInput = false;
 const Header = ({ currentUser, hidden, filterProduct }) => {
   const [searchValue, setSearchValue] = useState("");
 
-  React.useEffect(() => {
-    console.log("window.location", window.location);
-    console.log('process.env.REACT_APP_API_URL', process.env.REACT_APP_API_URL)
-  });
+  // React.useEffect(() => {
+  //   console.log("window.location", window.location);
+  //   console.log('process.env.REACT_APP_API_URL', process.env.REACT_APP_API_URL)
+  // });
   const handleChange = (e) => {
     const { value } = e?.target;
     setSearchValue(value || "");
     filterProduct(value);
   };
-   return <div className="header">
+  return (
+    <div className="header">
       <Link className="logo-container" to="/">
         <Logo className="logo" />
       </Link>
@@ -58,6 +59,7 @@ const Header = ({ currentUser, hidden, filterProduct }) => {
       {hidden ? null : <CartDropdown />}
       {/* <p className = king>&#169 2021</p> */}
     </div>
+  );
 };
 
 const mapStateToProps = createStructuredSelector({

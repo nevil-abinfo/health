@@ -1,3 +1,4 @@
 export const ShopActionTypes = {
   SET_FILTER_VALUE: "SET_FILTER_VALUE",
+  SET_MEDICINE_LIST: "SET_MEDICINE_LIST",
 };
