@@ -10,13 +10,7 @@ const CollectionPreview = ({
   ItemID,
 }) => {
   const item = { ItemName, ItemImageURl, ItemPrice, UOMDescription, ItemID };
-  return (
-    <div className="collection-preview">
-      <div className="preview">
-        <CollectionItem item={item} />
-      </div>
-    </div>
-  );
+  return <CollectionItem item={item} />
 };
 
 export default CollectionPreview;

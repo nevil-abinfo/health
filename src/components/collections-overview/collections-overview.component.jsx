@@ -19,7 +19,7 @@ const CollectionsOverview = ({ collections, setMedicine }) => {
     }
   };
   return (
-    <div className={"collections-overview"}>
+    <div className="collections-overview">
       {collections.map(({ ...otherCollectionProps }) => (
         <CollectionPreview
           key={otherCollectionProps?.ItemID}
