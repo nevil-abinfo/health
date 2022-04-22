@@ -28,22 +28,13 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const AddressList = (props) => {
-  const [uomData, setUomData] = useState({
-    UOMID: "",
-    UOMName: "",
-    UOMDescription: "",
-    Adddate: new Date(),
-    Modedate: new Date(),
-    date: new Date(),
-  });
-  const [uid, setId] = useState();
-
   const config = {
     headers: {
       Authorization: "Bearer " + window.localStorage.getItem("token"),
     },
   };
   const [address, setAddress] = useState([]);
+
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(0);
 
@@ -61,27 +52,19 @@ const AddressList = (props) => {
   }, []);
 
   const loadAddresList = async () => {
+    var customerid = JSON.parse(localStorage.getItem("user"));
+
+    // alert(customerid.ClientID)
     const result = await axios.get(
-      "https://localhost:44342/api/OperateAddressmaster/GetAllAddress",
+      `https://localhost:44342/api/OperateAddressmaster/GetAddressByCustID?CustID=${customerid.ClientID}`,
       config
     );
     setAddress(result.data.AddressMaster);
   };
 
-  const handleChange = (event) => {
-    event.persist();
-    setUomData({
-      ...uomData,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const handleDateChange = (date) => {
-    setUomData({ ...uomData, date });
-  };
-
   const handleEdit = (id) => {
-    const { history } = props;
+    // navigate(`/master/UomMaster/UOMAddOrEdit/${id}`)
+    window.location.href = window.location.origin + `/address?id=${id}`;
   };
   const AddAddress = () => {
     window.location.href = window.location.origin + "/address";
@@ -137,7 +120,7 @@ const AddressList = (props) => {
             ) {
               Swal.fire({
                 title: "Done!",
-                text: "Success! Your UOM Delete Successfully.",
+                text: "Success! Your Address deleted Successfully.",
                 icon: "success",
                 timer: 4000,
                 button: false,
@@ -148,21 +131,7 @@ const AddressList = (props) => {
       }
     });
   };
-  const EditAddress = (
-    id,
-    AddressType,
-    Address1,
-    Address2,
-    Address3,
-    City,
-    State,
-    Country,
-    ZipCode,
-    ContactPerson,
-    ContactNo
-  ) => {
-    alert(id);
-  };
+
   return (
     <>
       <DialogTitle id="alert-dialog-title">Address List</DialogTitle>
@@ -198,45 +167,18 @@ const AddressList = (props) => {
                 } = data;
                 return (
                   <div key={index} className="address-box">
-                    {/* <input
-                          type="checkbox"
-                          checked={IsDefault}
-                        //   onChange={(e) => handleChangeAddress(e, index)}
-                        />{" "} */}
                     <Button
                       style={{ paddingRight: 20 }}
                       color="primary"
                       variant="contained"
                       type="submit"
-                      onClick={() =>
-                        EditAddress(
-                          data.AddressID,
-                          data.AddressType,
-                          data.Address1,
-                          data.Address2,
-                          data.Address3,
-                          data.City,
-                          data.State,
-                          data.Country,
-                          data.ZipCode,
-                          data.ContactPerson,
-                          data.ContactNo
-                        )
-                      }
-                      // onClick={() =>
-                      //     navigate('/master/UomMaster/UOMAddOrEdit/id')
-                      // }
-                      sx={{ ml: 15 }}
+                      onClick={() => handleEdit(data.AddressID)}
+                      sx={{ ml: 1 }}
                     >
-                      <span
-                      //  sx={{ pl: 1, textTransform: 'capitalize' }}
-                      >
-                        Edit
-                      </span>
+                      <span>Edit</span>
                     </Button>
                     <Button
                       style={{ paddingRight: 20 }}
-                      // color="primary"
                       className="btn btn-sm btn-danger"
                       variant="contained"
                       type="submit"
@@ -255,23 +197,17 @@ const AddressList = (props) => {
                           data.ContactNo
                         )
                       }
-                      // onClick={() =>
-                      //     navigate('/master/UomMaster/UOMAddOrEdit/id')
-                      // }
-                      sx={{ ml: 20 }}
+                      sx={{ ml: 2 }}
                     >
-                      <span
-                      //  sx={{ pl: 1, textTransform: 'capitalize' }}
-                      >
-                        Delete
-                      </span>
+                      <span>Delete</span>
                       <br />
                     </Button>
-                    <label>
+                    <br />
+                    <label style={{ marginLeft: 10 }}>
                       <b> Contact Persone</b>: {ContactPerson || ""}
                     </label>{" "}
                     <br></br>
-                    <label className="address">
+                    <label style={{ marginLeft: 10 }} className="address">
                       <b>Address</b>:{" "}
                       {`${Address1}, ${Address2}, ${Address3}, ${City}, ${State}, ${Country}, ${ZipCode}.`}
                     </label>
@@ -281,10 +217,6 @@ const AddressList = (props) => {
             : "You don't have any address currnettly please add address first then you can checkout!"}
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
-        <Button>Cancle</Button>
-        <Button>Ok</Button>
-      </DialogActions>
     </>
   );
 };

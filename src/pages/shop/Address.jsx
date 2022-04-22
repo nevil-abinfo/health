@@ -1,41 +1,69 @@
-import React, { useState } from "react";
-// import {
-//     Card,
-//     Grid,
-//     Button,
-//     Checkbox,
-//     CircularProgress,
-//     FormControlLabel,
-// } from '@mui/material'
-// import FormInput from '';
-// import 'collections.overview.styles.scss'
-// import FormInput from '../../components/collections-overview/collections-overview.component'
+import React, { useEffect, useState } from "react";
+
 import axios from "axios";
 import Swal from "sweetalert2";
 
 const Address = () => {
-  const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    addresstype: "",
-    address1: "", //'jason@ui-lib.com',
-    address2: "", //'dummyPasss',
-    address3: "",
-    city: "",
-    state: "",
-    country: "",
-    zipcode: "",
-    contactperson: "",
-    contactno: "",
+    AddressID: "",
+    CustID: "",
+    AddressType: "",
+    Address1: "",
+    Address2: "",
+    Address3: "",
+    City: "",
+    State: "",
+    Country: "",
+    ZipCode: "",
+    ContactPerson: "",
+    ContactNo: "",
   });
-  const [message, setMessage] = useState("");
-
-  const handleChange = ({ target: { name, value } }) => {
-    let temp = { ...userInfo };
-    temp[name] = value;
-    setUserInfo(temp);
+  const [address, setAddress] = useState([]);
+  const config = {
+    headers: {
+      Authorization: "Bearer " + window.localStorage.getItem("token"),
+    },
   };
+  const uidpath = window.location.href;
+
+  let resultforid = uidpath.substring(33);
+  useEffect(() => {
+    loadAddresListById(resultforid);
+  }, []);
+  const loadAddresListById = async (id) => {
+    const result = await axios.get(
+      `https://localhost:44342/api/OperateAddressmaster/GetAddressMasterById?AddressID=${id}`,
+      config
+    );
+
+    setUserInfo({
+      ...userInfo,
+      AddressID: result.data.AddressMaster[0].AddressID,
+      CustID: result.data.AddressMaster[0].CustID,
+      AddressType: result.data.AddressMaster[0].AddressType,
+      Address1: result.data.AddressMaster[0].Address1,
+      Address2: result.data.AddressMaster[0].Address2,
+      Address3: result.data.AddressMaster[0].Address3,
+      City: result.data.AddressMaster[0].City,
+      State: result.data.AddressMaster[0].State,
+      Country: result.data.AddressMaster[0].Country,
+      ZipCode: result.data.AddressMaster[0].ZipCode,
+      ContactPerson: result.data.AddressMaster[0].ContactPerson,
+      ContactNo: result.data.AddressMaster[0].ContactNo,
+    });
+  };
+
+  const handleChange = (event) => {
+    event.persist();
+    setUserInfo({
+      ...userInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   const handleSubmit = async (event) => {
-    Add();
+    if (resultforid == "id") Add();
+    else EditAddress();
   };
   const Add = async () => {
     var customerid = JSON.parse(localStorage.getItem("user"));
@@ -50,24 +78,21 @@ const Address = () => {
         "https://localhost:44342/api/OperateAddressmaster/InsertAddress",
         {
           CustID: customerid.ClientID, //1,
-          addresstype: userInfo.addresstype,
-          address1: userInfo.address1,
-          address2: userInfo.address2,
-          address3: userInfo.address3,
-          city: userInfo.city,
-          state: userInfo.state,
-          country: userInfo.country,
-          zipcode: userInfo.zipcode,
-          contactperson: userInfo.contactperson,
-          contactno: userInfo.contactno,
+          addresstype: userInfo.AddressType,
+          address1: userInfo.Address1,
+          address2: userInfo.Address2,
+          address3: userInfo.Address3,
+          city: userInfo.City,
+          state: userInfo.State,
+          country: userInfo.Country,
+          zipcode: userInfo.ZipCode,
+          contactperson: userInfo.ContactPerson,
+          contactno: userInfo.ContactNo,
         },
         config
       )
       .then((json) => {
-        // console.log(json.data)
         if (json.data.message == "Success! Your Address Insert Successfully.") {
-          // console.log(json.data.Status)
-          // alert('UOM Master Save Successfully')
           Swal.fire({
             title: "Success",
             type: "success",
@@ -80,109 +105,156 @@ const Address = () => {
         }
       });
   };
+  const EditAddress = async () => {
+    const result = await axios
+      .put(
+        "https://localhost:44342/api/OperateAddressmaster/UpdateAddress/",
+        {
+          AddressID: userInfo.AddressID,
+          CustID: userInfo.CustID,
+          addresstype: userInfo.AddressType,
+          address1: userInfo.Address1,
+          address2: userInfo.Address2,
+          address3: userInfo.Address3,
+          city: userInfo.City,
+          state: userInfo.State,
+          country: userInfo.Country,
+          zipcode: userInfo.ZipCode,
+          contactperson: userInfo.ContactPerson,
+          contactno: userInfo.ContactNo,
+        },
+        config
+      )
+      .then((json) => {
+        if (
+          json.data.message == "Success! Your Address Updated Successfully."
+        ) {
+          Swal.fire({
+            title: "Success",
+            type: "success",
+            text: "Success! Your Address Updated Successfully.",
+          });
+          window.location.href = window.location.origin + "/addresslist";
+        } else {
+          alert("Somthing wrong..");
+          debugger;
+        }
+      });
+  };
 
   return (
     <>
       <center>
-        <form
-        //    onSubmit={()=>handleSubmit()}
-        >
+        <form onSubmit={handleSubmit}>
+          {/* <ValidatorForm onSubmit={handleSubmit} onError={() => null}></ValidatorForm> */}
           <div className="sign-in">
             <h2>Add Your Address Here</h2>
             <span>Enter Your Address Type</span>
             <input
               type="text"
-              name="addresstype"
+              name="AddressType"
               placeholder="Enter Your address1"
               onChange={handleChange}
-              value={userInfo.addresstype}
+              value={userInfo.AddressType}
             />
             <span>Enter Your Address1</span>
             <input
               type="text"
-              name="address1"
+              name="Address1"
               placeholder="Enter Your address1"
               onChange={handleChange}
-              value={userInfo.address1}
+              value={userInfo.Address1}
             />
             <span>Enter Your Address2</span>
             <input
               type="text"
-              name="address2"
+              name="Address2"
               placeholder="Enter Your address2"
               onChange={handleChange}
-              value={userInfo.address2}
+              value={userInfo.Address2}
             />
             <span>Enter Your Address3</span>
             <input
               type="text"
-              name="address3"
+              name="Address3"
               placeholder="Enter Your address3"
               onChange={handleChange}
-              value={userInfo.address3}
+              value={userInfo.Address3}
             />
             <span>Enter Your City</span>
             <input
               type="text"
-              name="city"
+              name="City"
               placeholder="Enter Your city"
               onChange={handleChange}
-              value={userInfo.city}
+              value={userInfo.City}
             />
             <span>Enter Your State</span>
             <input
               type="text"
-              name="state"
+              name="State"
               placeholder="Enter Your state"
               onChange={handleChange}
-              value={userInfo.state}
+              value={userInfo.State}
             />
             <span>Enter Your Country</span>
             <input
               type="text"
-              name="country"
+              name="Country"
               placeholder="Enter Your country"
               onChange={handleChange}
-              value={userInfo.country}
+              value={userInfo.Country}
             />
             <span>Enter Your Zipcode</span>
             <input
               type="text"
-              name="zipcode"
+              name="ZipCode"
               placeholder="Enter Your zipcode"
               onChange={handleChange}
-              value={userInfo.zipcode}
+              value={userInfo.ZipCode}
             />
             <span>Enter Contact Person</span>
             <input
               type="text"
-              name="contactperson"
+              name="ContactPerson"
               placeholder="Enter Your contactperson"
               onChange={handleChange}
-              value={userInfo.contactperson}
+              value={userInfo.ContactPerson}
             />
             <span>Enter Mobile no</span>
             <input
               type="text"
-              name="contactno"
+              name="ContactNo"
               placeholder="Enter Your mobileno"
               onChange={handleChange}
-              value={userInfo.contactno}
+              value={userInfo.ContactNo}
             />
             <br />
 
             <div className="buttons">
               <center>
-                {" "}
-                <button
-                  type="submit"
-                  style={{ marginLeft: 140 }}
-                  className="btn btn-lg btn-md-6 btn-primary"
-                  onClick={() => Add()}
-                >
-                  {" "}
-                  Submit{" "}
-                </button>
+                {!userInfo.AddressID && (
+                  <button
+                    type="submit"
+                    style={{ marginLeft: 140 }}
+                    className="btn btn-lg btn-md-6 btn-primary"
+                    onClick={() => Add()}
+                  >
+                    {" "}
+                    Add Recortd{" "}
+                  </button>
+                )}
+                {userInfo.AddressID && (
+                  <button
+                    type="submit"
+                    style={{ marginLeft: 140 }}
+                    className="btn btn-lg btn-md-6 btn-primary"
+                    onClick={() => EditAddress(userInfo.AddressID)}
+                  >
+                    {" "}
+                    Update Recortd{" "}
+                  </button>
+                )}
               </center>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Profiler, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -27,7 +27,7 @@ const Header = ({ currentUser, hidden, getAllCartItem }) => {
       (localStorage.getItem("user") &&
         JSON.parse(localStorage.getItem("user"))?.ClientID) ||
       null;
-    // currentUser = localStorage.getItem('user');
+
     setUser(JSON.parse(localStorage.getItem("user")));
     if (clientID) {
       const response = await AxiosAPI(
@@ -40,7 +40,6 @@ const Header = ({ currentUser, hidden, getAllCartItem }) => {
       }
     }
   };
-
   const bankPage = () => {
     window.location.href = window.location.origin + "/bank";
   };
@@ -50,6 +49,12 @@ const Header = ({ currentUser, hidden, getAllCartItem }) => {
   };
   const Address = () => {
     window.location.href = window.location.origin + "/addresslist";
+  };
+  const Invoice = () => {
+    window.location.href = window.location.origin + "/invoice";
+  };
+  const Profiler = () => {
+    window.location.href = window.location.origin + "/shop";
   };
   const Signout = () => {
     localStorage.clear();
@@ -81,7 +86,10 @@ const Header = ({ currentUser, hidden, getAllCartItem }) => {
       <div className="options">
         {users && (
           <>
-            <p sx={{ pl: 1, textTransform: "capitalize" }}>
+            <p
+              sx={{ pl: 1, textTransform: "capitalize" }}
+              onClick={() => Profiler()}
+            >
               {`Hi ${users.ClientName}${"- "}${users.AvailableFund}`}
             </p>
             <br />
@@ -104,6 +112,12 @@ const Header = ({ currentUser, hidden, getAllCartItem }) => {
           // <div className="option" onClick={() => auth.signOut()}>
           <div className="option" to="/bank" onClick={FundPage}>
             Fund
+          </div>
+        )}
+        {users && (
+          // <div className="option" onClick={() => auth.signOut()}>
+          <div className="option" onClick={() => Invoice()}>
+            Invoice
           </div>
         )}
         {/* {currentUser ? ( */}

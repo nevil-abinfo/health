@@ -6,6 +6,8 @@ import CheckoutPage from "./pages/checkout/checkout.component";
 
 import Address from "./pages/shop/Address";
 import AddressList from "./pages/shop/AddressList";
+import Invoice from "./pages/shop/Invoice";
+
 import SignInAndSignUp from "./pages/sign-in-sign-up/sign-in-sign-up.component";
 import Header from "./components/header/header.component";
 
@@ -18,6 +20,20 @@ import BankPage from "./pages/bank/bank.component";
 import FundPage from "./pages/fund/fund.components";
 
 import "./App.css";
+
+// JSON.parse(data.user)?.Client[0]
+// {
+//   "ClientID": 1,
+//   "ID": 3,
+//   "ClientName": "Sanjeev Godakhindi",
+//   "AvailableFund": 42700,
+//   "CompnayName": "Cipla Limited",
+//   "EmailID": "Sanjeev@Gmail.com",
+//   "MobileNo": "909090445",
+//   "RegistrationDate": "2022-03-14T15:09:19.7"
+// }
+
+// '{"ClientID":1,"ID":3,"ClientName":"Sanjeev Godakhindi","AvailableFund":42700,"CompnayName":"Cipla Limited","EmailID":"Sanjeev@Gmail.com","MobileNo":"909090445","RegistrationDate":"2022-03-14T15:09:19.7"}'
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
@@ -51,12 +67,15 @@ class App extends React.Component {
         <Header />
         <Switch>
           <Route exact path="/" component={ShopPage} />
+          {/* <Route exact path="/" component={SignInAndSignUp} /> */}
           <Route path="/shop" component={ShopPage} />
           <Route path="/address" component={Address} />
           <Route path="/addresslist" component={AddressList} />
+          <Route path="/invoice" component={Invoice} />
           <Route exact path="/checkout" component={CheckoutPage} />
           <Route exact path="/bank" component={BankPage} />
           <Route exact path="/fund" component={FundPage} />
+
           <Route
             exact
             path="/signin"
