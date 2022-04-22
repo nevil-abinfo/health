@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme/build'
 import { render } from '@testing-library/react';
 import App from './App';
-import { store, persistor } from './redux/store.js'
+import { store } from './redux/store.js'
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
@@ -13,9 +13,9 @@ it('mounts App without crashing', () => {
   mount(
     <Provider store={store}>
       <BrowserRouter>
-        <PersistGate persistor={persistor}>
+        {/* <PersistGate persistor={persistor}> */}
           <App />
-        </PersistGate>
+        {/* </PersistGate> */}
       </BrowserRouter>
     </Provider>
   )

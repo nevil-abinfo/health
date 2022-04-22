@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -11,27 +11,32 @@ import { selectCartHidden } from "../../redux/cart/cart.selectors.js";
 import { selectCurrentUser } from "../../redux/user/user.selector.js";
 
 import "./header.styles.scss";
-import FormInput from "../form-input/form-input.component.jsx";
-import { setFilterValue } from "../../redux/shop/shop.actions.js";
-let hideSearchInput = false;
-const Header = ({ currentUser, hidden, filterProduct }) => {
-  const [searchValue, setSearchValue] = useState("");
+import CustomizedHook from "../disease-drop-down/index.js";
+import { AxiosAPI } from "../../utils/axios.js";
+import { getAllCartItem } from "../../redux/cart/cart.actions.js";
 
-  // React.useEffect(() => {
-  //   console.log("window.location", window.location);
-  //   console.log('process.env.REACT_APP_API_URL', process.env.REACT_APP_API_URL)
-  // });
-  const handleChange = (e) => {
-    const { value } = e?.target;
-    setSearchValue(value || "");
-    filterProduct(value);
-  };
+const Header = ({ currentUser, hidden , getAllCartItem }) => {
+
+  useEffect(()=>{
+    handleGetCardList()
+  },[])
+
+  const handleGetCardList = async () =>{
+
+    const clientID =(localStorage.getItem('user') && JSON.parse(localStorage.getItem('user'))?.ClientID) || null
+    if(clientID){
+      const response = await AxiosAPI(`OperateCart/GetCartByClientID?ClientID=${clientID}`, "get", null);
+      if(response && response?.Table){
+        getAllCartItem(response?.Table || [])
+      }
+    }
+  }
   return (
     <div className="header">
       <Link className="logo-container" to="/">
         <Logo className="logo" />
       </Link>
-      {!hideSearchInput && (
+      {/* {!hideSearchInput && (
         <div>
           <FormInput
             name="medicine"
@@ -42,7 +47,10 @@ const Header = ({ currentUser, hidden, filterProduct }) => {
             search="true"
           />
         </div>
-      )}
+      )} */}
+      <div className="search-position">
+        <CustomizedHook />
+      </div>
 
       <div className="options">
         {currentUser ? (
@@ -68,7 +76,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  filterProduct: (user) => dispatch(setFilterValue(user)),
+  getAllCartItem: (user) => dispatch(getAllCartItem(user)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

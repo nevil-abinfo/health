@@ -1,16 +1,62 @@
 import React from "react";
 import { connect } from "react-redux";
 import CustomButton from "../custom-button/custom-button.component.jsx";
-import { addItem } from "../../redux/cart/cart.actions.js";
+import { getAllCartItem } from "../../redux/cart/cart.actions.js";
 import noImage from "../../assets/no-image";
 
 import "./collection-item.styles.scss";
+import { AxiosAPI } from "../../utils/axios.js";
 
-const CollectionItem = ({ item, addItem }) => {
-  const { ItemName, ItemImageURl, ItemPrice, UOMDescription } = item;
+const CollectionItem = ({ item, getAllCartItem }) => {
+  const {
+    ItemName,
+    ItemImageURl,
+    ItemPrice,
+    UOMName,
+    ItemDescription,
+    ItemType1,
+    ItemStockID,
+  } = item;
+  const handleAddtoCart = async () => {
+    const clientID = 1 || JSON.parse(localStorage.getItem('user'))?.ClientID || null
+    if (clientID) {
+      const payload = {
+        cartID: 0,
+        clientID: clientID,
+        itemStockID: ItemStockID,
+        qty: 1,
+        rate: ItemPrice,
+        amount: ItemPrice,
+      };
+      const response = await AxiosAPI(
+        `OperateCart/Insertcart`,
+        "post",
+        payload
+      );
+      if (response && response?.message) {
+        getAllCardList();
+      }
+    }
+  };
+
+  const getAllCardList = async () => {
+    const clientID = 1 || JSON.parse(localStorage.getItem('user'))?.ClientID || null;
+    if (clientID) {
+      const response = await AxiosAPI(
+        `OperateCart/GetCartByClientID?ClientID=${clientID}`,
+        "get",
+        null
+      );
+      if (response && response?.Table) {
+        getAllCartItem(response?.Table || []);
+      }
+    }
+  };
+
   return (
     <div className="collection-item">
       <div
+        title={ItemDescription || ""}
         className="image"
         style={{
           backgroundImage: `url(${
@@ -23,10 +69,11 @@ const CollectionItem = ({ item, addItem }) => {
         <span className="price"> {ItemPrice} </span>
       </div>
       <div className="collection-footer">
-        <span className="name"> {UOMDescription} </span>
+        <span className="name"> {ItemType1} </span>
+        <span className="uomName"> {UOMName} </span>
       </div>
 
-      <CustomButton onClick={() => addItem(item)} inverted>
+      <CustomButton onClick={() => handleAddtoCart()} inverted>
         Add to cart
       </CustomButton>
     </div>
@@ -34,7 +81,7 @@ const CollectionItem = ({ item, addItem }) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  addItem: (item) => dispatch(addItem(item)),
+  getAllCartItem: (item) => dispatch(getAllCartItem(item)),
 });
 
 export default connect(null, mapDispatchToProps)(CollectionItem);

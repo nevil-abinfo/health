@@ -15,6 +15,20 @@ import { selectCurrentUser } from "./redux/user/user.selector";
 
 import "./App.css";
 
+// JSON.parse(data.user)?.Client[0]
+// {
+//   "ClientID": 1,
+//   "ID": 3,
+//   "ClientName": "Sanjeev Godakhindi",
+//   "AvailableFund": 42700,
+//   "CompnayName": "Cipla Limited",
+//   "EmailID": "Sanjeev@Gmail.com",
+//   "MobileNo": "909090445",
+//   "RegistrationDate": "2022-03-14T15:09:19.7"
+// }
+
+// '{"ClientID":1,"ID":3,"ClientName":"Sanjeev Godakhindi","AvailableFund":42700,"CompnayName":"Cipla Limited","EmailID":"Sanjeev@Gmail.com","MobileNo":"909090445","RegistrationDate":"2022-03-14T15:09:19.7"}'
+
 class App extends React.Component {
   unsubscribeFromAuth = null;
 

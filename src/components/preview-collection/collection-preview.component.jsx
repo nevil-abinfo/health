@@ -3,14 +3,9 @@ import CollectionItem from "../collection-item/collection-item.component";
 import "./collection-preview.styles.scss";
 
 const CollectionPreview = ({
-  ItemName,
-  ItemImageURl,
-  ItemPrice,
-  UOMDescription,
-  ItemID,
+    ...otherCollectionProps
 }) => {
-  const item = { ItemName, ItemImageURl, ItemPrice, UOMDescription, ItemID };
-  return <CollectionItem item={item} />
+  return <CollectionItem item={otherCollectionProps} />
 };
 
 export default CollectionPreview;

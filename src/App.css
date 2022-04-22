@@ -11,6 +11,13 @@ body {
    background-color: var(--main-bg-color);
 }
 
+.css-9axxk4 {
+   display: none !important;
+}
+.css-1ggoop8 svg {
+   font-size: 23px !important;
+   padding: 3px !important;
+}
 a {
    text-decoration: none;
    color: black;
